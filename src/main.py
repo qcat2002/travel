@@ -5,7 +5,7 @@ import os
 
 def main():
     # 请填写绝对路径
-    file_path = '/Users/zepeng/travel/src/data/eil51-ttp/eil51_n50_uncorr_01.ttp'
+    file_path = '/Users/zepeng/travel/src/data/eil51-ttp/eil51_n150_bounded-strongly-corr_01.ttp'
     # 请填写 试验次数
     m = 30
     trial = 1
