@@ -166,6 +166,7 @@ class GA:
         if not os.path.exists(self.save_folder):
             os.makedirs(self.save_folder)
         plt.savefig(self.save_folder + f'Gen{gen}.png', dpi=300)
+        plt.close()
 
     def run(self):
         print(self.save_folder)
