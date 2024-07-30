@@ -115,7 +115,7 @@ class GA:
             number_of_graph = 3
         gs_sub = gridspec.GridSpec(number_of_graph, 1, height_ratios=[1 for _ in range(number_of_graph)], hspace=0.25, left=0.38, right=0.99)
         ax_title = fig.add_subplot(gs_sub[0])
-        ax_title.set_title(f"Picked and NOT-picked Items (X-Ticks = City ID)_Weight-{round(current_best.weight)}_Profit-{round(current_best.profit)}",
+        ax_title.set_title(f"({self.info.knapsack_data_type}) Picked and NOT-picked Items (X-Ticks = City ID)_Weight-{round(current_best.weight)}_Profit-{round(current_best.profit)}",
                            fontsize=12, fontweight='bold')
         # print(current_best.route)
         for timer in range(number_of_graph):
@@ -169,7 +169,6 @@ class GA:
         plt.close()
 
     def run(self):
-        print(self.save_folder)
         """
         Main Func to solve TTP
         1. Random Initialize
@@ -191,9 +190,9 @@ class GA:
             # append to pop
             initial_solution = Sol.Ind(route, kp)
             initial_solution.evaluate(self.info)
-            print(timer + 1, f'Fitness：{initial_solution.fitness}')
+            # print(timer + 1, f'Fitness：{initial_solution.fitness}')
             pop.append(initial_solution)
-        print(f'初始化 {self.population_size}个 个体-完成✅')
+        print('初始化 100 个 个体-完成✅')
         # Evolve
         for gen in range(self.generations):
             # tournament selection
