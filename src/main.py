@@ -15,7 +15,7 @@ def main():
     m = 30
     trial = 1
     # 调整我
-    my_path = file_path[0]
+    my_path = file_path[1]
     print(f"运行 {my_path.split('/')[-1]} ✅")
     while trial <= m:
         information = reader.readttp(my_path)
