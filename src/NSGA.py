@@ -165,3 +165,88 @@ class NSGA:
             os.makedirs(self.save_folder)
         plt.savefig(self.save_folder + f'Gen{gen}.png', dpi=300)
         plt.close()
+
+    def non_dominated_sort(self, population):
+        fronts = [[]]
+        domination_count = {}
+        dominated_solutions = {}
+        rank = {}
+
+        for p in population:
+            domination_count[p] = 0
+            dominated_solutions[p] = []
+            for q in population:
+                if self.dominates(p, q):
+                    dominated_solutions[p].append(q)
+                elif self.dominates(q, p):
+                    domination_count[p] += 1
+            if domination_count[p] == 0:
+                rank[p] = 0
+                fronts[0].append(p)
+
+        i = 0
+        while len(fronts[i]) > 0:
+            next_front = []
+            for p in fronts[i]:
+                for q in dominated_solutions[p]:
+                    domination_count[q] -= 1
+                    if domination_count[q] == 0:
+                        rank[q] = i + 1
+                        next_front.append(q)
+            i += 1
+            fronts.append(next_front)
+
+        fronts.pop()
+        return fronts
+
+    def dominates(self, individual1, individual2):
+        return (individual1.profit >= individual2.profit and individual1.time <= individual2.time) and \
+            (individual1.profit > individual2.profit or individual1.time < individual2.time)
+
+    def calculate_crowding_distance(self, front):
+        distance = {individual: 0 for individual in front}
+        num_individuals = len(front)
+
+        if num_individuals == 0:
+            return distance
+
+        objectives = ['profit', 'time']
+        for obj in objectives:
+            front.sort(key=lambda x: getattr(x, obj))
+            distance[front[0]] = float('inf')
+            distance[front[-1]] = float('inf')
+            obj_min = getattr(front[0], obj)
+            obj_max = getattr(front[-1], obj)
+            for i in range(1, num_individuals - 1):
+                if obj_max - obj_min == 0:
+                    distance[front[i]] += 0
+                else:
+                    distance[front[i]] += (getattr(front[i + 1], obj) - getattr(front[i - 1], obj)) / (
+                                obj_max - obj_min)
+
+        return distance
+
+    def run(self):
+        """
+        这是 NSGA 的算法方法
+        """
+        # Initialization
+        pop = []
+        original_route = [city_info[0] for city_info in self.info.cities[1:]]
+        for timer in range(self.population_size):
+            # randomized route
+            new_route = original_route[:]
+            random.shuffle(new_route)
+            route = [0] + new_route
+            # empty knapsack
+            kp = [0] * len(self.info.items)
+            # append to pop
+            initial_solution = Sol.Ind(route, kp)
+            initial_solution.evaluate(self.info)
+            # print(timer + 1, f'Fitness：{initial_solution.fitness}')
+            pop.append(initial_solution)
+        print('初始化 100 个 个体-完成✅')
+        # evolution
+        for gen in range(self.generations):
+            # Non Dominating Selection
+            self.non_dominated_sort(pop)
