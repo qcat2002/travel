@@ -249,4 +249,4 @@ class NSGA:
         # evolution
         for gen in range(self.generations):
             # Non Dominating Selection
-            self.non_dominated_sort(pop)
+            fronts = self.non_dominated_sort(pop)
