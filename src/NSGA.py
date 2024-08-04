@@ -18,8 +18,8 @@ class NSGA:
         self.generations = generations
         self.mutate_rate = mutate_rate
         self.good_solutions = []
-        self.route_mutation = 0.45
-        self.kp_mutation = 0.65
+        self.route_mutation = 0.4
+        self.kp_mutation = 0.7
         self.city_weights = []
         self.city_profits = []
         self.node_xs = [city_info[1] for city_info in info.cities]
@@ -60,6 +60,17 @@ class NSGA:
                 writer.writerow(information_row)
                 writer.writerow(ind.route)
                 writer.writerow(ind.kp)
+
+    def show_pareto(self, gen, pop, elite):
+        x = [ind.profit for ind in pop]
+        y = [ind.time for ind in pop]
+        plt.scatter(x,y)
+        plt.scatter(elite.profit, elite.time, color='black')
+        plt.title(f"Generation-{gen}_({round(elite.fitness)})")
+        if not os.path.exists(self.save_folder + "/pareto front"):
+            os.makedirs(self.save_folder + "/pareto front")
+        plt.savefig(self.save_folder + "/pareto front/" + f'Gen{gen}.png', dpi=300)
+        plt.close()
 
     def show_route(self, gen):
         """
@@ -284,9 +295,11 @@ class NSGA:
                     break
                 selected.extend(sorted_front.keys())
             selected = selected[:self.population_size]
+            pop = selected
             # find elite
             elite = max(selected, key=lambda x: x.fitness)
             self.good_solutions.append(elite)
             if (gen+1) % 100 == 0 or gen == 0:
+                print(gen+1, elite.fitness)
                 self.show_route(gen+1)
-                print(gen+1, elite.fitness, selected[0].fitness)
+                self.show_pareto(gen+1, pop, elite)
