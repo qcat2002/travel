@@ -13,7 +13,7 @@ class NSGA:
         self.info = info
         self.ttp_path = ttp_path
         self.trial = trial
-        self.save_folder = self.ttp_path.split('.ttp')[0] + f'/GA/trial{trial}/'
+        self.save_folder = self.ttp_path.split('.ttp')[0] + f'/NSGA/trial{trial}/'
         self.population_size = population_size
         self.generations = generations
         self.mutate_rate = mutate_rate
@@ -277,15 +277,16 @@ class NSGA:
             big_pop = pop + offspring
             # Non Dominating Selection
             fronts = self.non_dominated_sort(big_pop)
+            selected = []
             for front in fronts:
-                distance = self.calculate_crowding_distance(front)
-                print(distance)
-            # allow to delete
-            # front_timer = 0
-            # for front in fronts:
-            #     print(front_timer)
-            #     print([[ind.time, ind.profit, ind.fitness] for ind in front])
-            #     front_timer += 1
-
-            if gen == 1:
-                return
+                sorted_front = self.calculate_crowding_distance(front)
+                if len(selected) > self.population_size:
+                    break
+                selected.extend(sorted_front.keys())
+            selected = selected[:self.population_size]
+            # find elite
+            elite = max(selected, key=lambda x: x.fitness)
+            self.good_solutions.append(elite)
+            if (gen+1) % 100 == 0 or gen == 0:
+                self.show_route(gen+1)
+                print(gen+1, elite.fitness, selected[0].fitness)
