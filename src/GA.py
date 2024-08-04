@@ -19,8 +19,8 @@ class GA:
         self.generations = generations
         self.mutate_rate = mutate_rate
         self.good_solutions = []
-        self.route_mutation = 0.45
-        self.kp_mutation = 0.65
+        self.route_mutation = 0.55
+        self.kp_mutation = 0.7
         self.city_weights = []
         self.city_profits = []
         self.node_xs = [city_info[1] for city_info in info.cities]

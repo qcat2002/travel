@@ -13,7 +13,9 @@ def main(indicator):
     #              '/Users/zepeng/travel/src/data/eil51-ttp/eil51_n150_uncorr-similar-weights_01.ttp',
     #              '/Users/zepeng/travel/src/data/eil51-ttp/eil51_n150_uncorr_01.ttp']
     # 请填写 试验次数
+    pop_size = 300
     rate = 0.25
+    gen = 5000
     m = 30
     trial = 1
     # 调整我
@@ -25,8 +27,8 @@ def main(indicator):
             print(trial, '次运行')
             algorithm = GA.GA(information,
                               my_path, trial,
-                              200,
-                              10000,
+                              pop_size,
+                              gen,
                               rate)
             algorithm.run()
             trial += 1
@@ -37,8 +39,8 @@ def main(indicator):
             print(trial, '次运行')
             algorithm = NSGA.NSGA(information,
                                   my_path, trial,
-                                  200,
-                                  5000,
+                                  pop_size,
+                                  gen,
                                   rate)
             algorithm.run()
             trial += 1

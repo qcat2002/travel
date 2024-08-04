@@ -18,7 +18,7 @@ class NSGA:
         self.generations = generations
         self.mutate_rate = mutate_rate
         self.good_solutions = []
-        self.route_mutation = 0.4
+        self.route_mutation = 0.55
         self.kp_mutation = 0.7
         self.city_weights = []
         self.city_profits = []
