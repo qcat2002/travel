@@ -29,6 +29,7 @@ def main(indicator):
             algorithm.run()
             trial += 1
     else:
+        m = 1
         my_path = file_path[0]
         print(f"运行 {my_path.split('/')[-1]} ✅")
         information = reader.readttp(my_path)
@@ -38,6 +39,8 @@ def main(indicator):
                                   200,
                                   10000,
                                   0.15)
+            algorithm.run()
+            trial += 1
 
 # 0 NSGA / 1 GA
 main(0)

@@ -248,5 +248,44 @@ class NSGA:
         print('初始化 100 个 个体-完成✅')
         # evolution
         for gen in range(self.generations):
+            parents = []
+            offspring = []
+            vacancy = 0
+            # tournament
+            while vacancy < self.population_size:
+                vacancy += 1
+                candidate = random.sample(pop, 2)
+                if candidate[0].fitness > candidate[1].fitness:
+                    parents.append(candidate[0])
+                else:
+                    parents.append(candidate[1])
+                # print([ind.fitness for ind in parents])
+            remain = vacancy
+            while remain > 0:
+                parent1 = parents.pop()
+                parent2 = parents.pop()
+                # cross
+                cr1, cr2, ckp1, ckp2 = Cross.cross_me(parent1, parent2)
+                # mutate
+                cr1, cr2, ckp1, ckp2 = Mutate.mutate_me(cr1, cr2, ckp1, ckp2, self.route_mutation, self.kp_mutation)
+                child1 = Sol.Ind(cr1, ckp1)
+                child2 = Sol.Ind(cr2, ckp2)
+                child1.evaluate(self.info)
+                child2.evaluate(self.info)
+                offspring.extend([child1, child2])
+                remain -= 2
+            big_pop = pop + offspring
             # Non Dominating Selection
-            fronts = self.non_dominated_sort(pop)
+            fronts = self.non_dominated_sort(big_pop)
+            for front in fronts:
+                distance = self.calculate_crowding_distance(front)
+                print(distance)
+            # allow to delete
+            # front_timer = 0
+            # for front in fronts:
+            #     print(front_timer)
+            #     print([[ind.time, ind.profit, ind.fitness] for ind in front])
+            #     front_timer += 1
+
+            if gen == 1:
+                return
